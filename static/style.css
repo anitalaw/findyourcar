@@ -9,4 +9,9 @@ h1 {
     font-family: Roboto, Arial;
     font-size: 40px;
     font-weight: bold;
+    color:red;
 }
+
+#map {
+    height: 100%;
+  }

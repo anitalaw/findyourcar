@@ -14,10 +14,9 @@ client = smartcar.AuthClient(
     client_id=os.environ.get('CLIENT_ID'),
     client_secret=os.environ.get('CLIENT_SECRET'),
     redirect_uri=os.environ.get('REDIRECT_URI'),
-    scope=['required:read_location', 'required:read_vehicle_info'],
+    scope=['required:read_location', 'required:read_vehicle_info', 'required:read_odometer'],
     test_mode=True,
 )
-
 
 @app.route('/')
 def home():
@@ -44,7 +43,7 @@ def exchange_code():
     
     access = client.exchange_code(my_code)
 
-    return '', 200
+    return redirect('/locateme')
 
 @app.route('/vehicle')
 def vehicle():
@@ -67,6 +66,21 @@ def vehicle():
 
     return jsonify(info)
 
+@app.route('/locateme')
+def locate():
+    """Locate user's vehicle"""
+
+    global access
+
+    vehicle_ids = smartcar.get_vehicle_ids(access['access_token'])['vehicles']
+
+    selected_vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
+
+    location = selected_vehicle.location()
+    print(location)
+
+    return render_template('locateme.html', location=location)    
+
 @app.route('/location')
 def location():
     "Get vehicle ids in order to send a request to retrieve the vehicle's location"
@@ -83,6 +97,22 @@ def location():
 
     return jsonify(location)
 
+@app.route('/odometer')
+def odometer():
+    "Get vehicle ids in order to send a request to retrieve the vehicle's odometer"
+
+    global access
+    print('show me this', access)
+    vehicle_ids = smartcar.get_vehicle_ids(access['access_token'])['vehicles']
+
+    selected_vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
+
+    odometer = selected_vehicle.odometer()
+    print(odometer)
+
+    return jsonify(odometer)
+
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0')

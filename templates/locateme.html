@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Oh, there you are!</h1>
+
+
+<div id="map" style="height: 500px;"></div>
+    <script>
+    const vehicleCoords = {
+        lat: parseFloat("{{location.data.latitude}}"),
+        lng: parseFloat("{{location.data.longitude}}")
+    };
+
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: vehicleCoords,
+            zoom: 15
+        });
+        // Icon img for marker
+        const icon = {
+            url: '/static/img/wheel.png',
+            scaledSize: new google.maps.Size(30, 30)
+        };
+        // Instantiate a marker
+        const vehicleMarker = addMarker(icon, vehicleCoords, 'Your car', map);
+        const info = infoWindow(vehicleMarker, map)
+    }
+
+    // Marker helper function
+    function addMarker(icon, position, title, map) {
+        const marker = new google.maps.Marker({
+            icon,
+            position,
+            title,
+            map
+        });
+        return marker;
+    }
+    // Info window helper function
+    function infoWindow(marker, map) {
+        const content = `<h1>${marker.title}</h1>
+                        <p>Located at</p>
+                        <ul>
+                            <li><b>Lat:</b> ${marker.position.lat()}</li>
+                            <li><b>Lng:</b> ${marker.position.lng()}</li>
+                        </ul>`;
+
+        const infoWindow = new google.maps.InfoWindow({
+            content,
+            maxWidth: 200
+        });
+
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+    }
+    </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD30cVEpqhpRSpNdAbMR2hQvI3GoLXT9so&libraries=places&callback=initMap"
+    async defer></script>
+
+{% endblock %}

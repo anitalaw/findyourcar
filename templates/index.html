@@ -1,21 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> 
-   
-    <!-- My own stylesheet -->
-    <link rel="stylesheet" href="/static/style.css" type = "text/css">  
-    <title>Hello World</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
     <h1>Alaw's app</h1>
     <h3>Placeholder for app description</h3>
     <br>
+    
     <a href="/login">Get started</a>
 
-</body>
-</html>
+{% endblock %}
