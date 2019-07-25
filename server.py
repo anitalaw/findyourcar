@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = 'abcd1233134'
 CORS(app)
 
-#setup client, smartcar credentials
+
 client = smartcar.AuthClient(
     client_id=os.environ.get('CLIENT_ID'),
     client_secret=os.environ.get('CLIENT_SECRET'),
@@ -18,11 +18,13 @@ client = smartcar.AuthClient(
     test_mode=True,
 )
 
+
 @app.route('/')
 def home():
     """Display the homepage"""
 
     return render_template('index.html')
+
 
 @app.route('/login')
 def login():
@@ -31,6 +33,7 @@ def login():
     #Launch Smartcar authentication dialog
     auth_url = client.get_auth_url()
     return redirect(auth_url)
+
 
 @app.route('/exchange')
 def exchange_code():
@@ -43,30 +46,10 @@ def exchange_code():
     
     access = client.exchange_code(my_code)
 
-    return redirect('/locateme')
-
-@app.route('/vehicle')
-def vehicle():
-    """Get vehicle ids in order to send a request to a vehicle"""
+    return redirect('/location')
 
 
-    # Access the global variable to retrieve our access tokens
-    global access
-    
-    #   Request Step 2: the list of vehicle ids
-    vehicle_ids = smartcar.get_vehicle_ids(
-        access['access_token'])['vehicles']
-    
-    #   Request Step 3: Create a vehicle. Instantiate the first vehicle in the vehicle id list
-    selected_vehicle = smartcar.Vehicle(vehicle_ids[1], access['access_token'])
-
-    #   Request Step 4: Make a request to Smartcar API
-    info = selected_vehicle.info()
-    print(info)
-
-    return jsonify(info)
-
-@app.route('/locateme')
+@app.route('/location')
 def locate():
     """Locate user's vehicle"""
 
@@ -77,40 +60,10 @@ def locate():
     selected_vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
 
     location = selected_vehicle.location()
-    print(location)
-
-    return render_template('locateme.html', location=location)    
-
-@app.route('/location')
-def location():
-    "Get vehicle ids in order to send a request to retrieve the vehicle's location"
-    
-    global access
-
-    vehicle_ids = smartcar.get_vehicle_ids(
-    access['access_token'])['vehicles']
-
-    selected_vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
-
-    location = selected_vehicle.location()
-    print(location)
-
-    return jsonify(location)
-
-@app.route('/odometer')
-def odometer():
-    "Get vehicle ids in order to send a request to retrieve the vehicle's odometer"
-
-    global access
-    print('show me this', access)
-    vehicle_ids = smartcar.get_vehicle_ids(access['access_token'])['vehicles']
-
-    selected_vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
-
+    info = selected_vehicle.info()
     odometer = selected_vehicle.odometer()
-    print(odometer)
-
-    return jsonify(odometer)
+    
+    return render_template('locateme.html', location=location, info=info, odometer=odometer)    
 
 
 

@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Oh, there you are!</h1>
 
-
-<div id="map" style="height: 500px;"></div>
+<div id="map" style="height: 700px"></div>
     <script>
     const vehicleCoords = {
         lat: parseFloat("{{location.data.latitude}}"),
@@ -14,7 +12,7 @@
     function initMap() {
         const map = new google.maps.Map(document.getElementById('map'), {
             center: vehicleCoords,
-            zoom: 15
+            zoom: 11
         });
         // Icon img for marker
         const icon = {
@@ -22,7 +20,7 @@
             scaledSize: new google.maps.Size(30, 30)
         };
         // Instantiate a marker
-        const vehicleMarker = addMarker(icon, vehicleCoords, 'Your car', map);
+        const vehicleMarker = addMarker(icon, vehicleCoords, "{{info.make}}", map);
         const info = infoWindow(vehicleMarker, map)
     }
 
@@ -38,13 +36,12 @@
     }
     // Info window helper function
     function infoWindow(marker, map) {
-        const content = `<h1>${marker.title}</h1>
-                        <p>Located at</p>
-                        <ul>
-                            <li><b>Lat:</b> ${marker.position.lat()}</li>
-                            <li><b>Lng:</b> ${marker.position.lng()}</li>
-                        </ul>`;
-
+        const content = `<h5>${marker.title}</h5>
+                        <p>Details:</p>
+                        <b>Odometer:</b> {{odometer.data.distance}}<br>
+                        <b>Lat:</b> ${marker.position.lat()} <br>
+                        <b>Lng:</b> ${marker.position.lng()}`;
+                        
         const infoWindow = new google.maps.InfoWindow({
             content,
             maxWidth: 200

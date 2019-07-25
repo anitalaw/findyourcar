@@ -5,13 +5,35 @@ body {
     font-size: 13px;
 }
 
-h1 {
+html { 
+    background: url(/static/img/tesla_s4.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+h5 {
     font-family: Roboto, Arial;
-    font-size: 40px;
     font-weight: bold;
-    color:red;
+    color:#d90000;
 }
 
-#map {
-    height: 100%;
-  }
+.container {
+    position: fixed;
+    top: 50%;
+    left: 45%;
+}
+
+.btn-red {
+    background-color: #d90000;
+    color: white;
+    position: initial;
+}
+
+.btn-red:hover {
+    background-color: #a50f0f;
+    color: white;
+    font-weight: bolder;
+}
+
